@@ -1,2 +1,44 @@
 # Competitor-Benchmarking-Dashboard
 Objective: Analyze competitors’ services and pricing for market insights.  Task Deliverables:  Scrape competitor websites. Visualize differences in pricing, offerings, and user engagement. Outcome: Data-driven decisions for pricing strategy. 📊 Data Source: Competitor websites (via scraping or APIs).
+
+Step 1
+# Install Plotly for interactive charts and Streamlit for the dashboard interface
+!pip install -q streamlit plotly pandas
+ 
+Step 2
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+
+# 1. LOAD YOUR SCRAPED DATA (Using sample data based on your "Shoes" scrape)
+# In your actual task, replace this with: df = pd.read_csv('competitor_analysis.csv')
+data = {
+    'Platform': ['Amazon', 'Amazon', 'eBay', 'eBay', 'Vegas.pk', 'Vegas.pk'],
+    'Product': ['Running Shoe A', 'Running Shoe B', 'Running Shoe A', 'Casual Sneaker', 'Pro Shoe X', 'Fit Me Shoe'],
+    'Price': [45.0, 85.0, 38.0, 25.0, 110.0, 95.0],
+    'Engagement': [1200, 450, 200, 85, 30, 55],
+    'Offering_Type': ['Mass', 'Premium', 'Mass', 'Budget', 'Specialist', 'Specialist']
+}
+df = pd.DataFrame(data)
+
+# --- VISUALIZATION 1: PRICING COMPARISON ---
+fig_price = px.box(df, x='Platform', y='Price', color='Platform',
+             title='<b>Pricing Strategy:</b> Market Price Spread by Platform',
+             points="all", template='plotly_white')
+
+# --- VISUALIZATION 2: ENGAGEMENT VS. PRICE ---
+fig_engage = px.scatter(df, x='Price', y='Engagement', color='Platform',
+                 size='Engagement', hover_name='Product',
+                 title='<b>User Engagement:</b> Price vs. Review Volume',
+                 labels={'Engagement': 'Number of Reviews'},
+                 template='plotly_dark')
+
+# --- VISUALIZATION 3: OFFERING DENSITY ---
+fig_matrix = px.density_heatmap(df, x='Offering_Type', y='Platform', z='Price',
+                         title='<b>Competitor Offerings:</b> Price Density by Segment',
+                         color_continuous_scale='Viridis')
+
+# 3. DISPLAY THE DASHBOARD IN COLAB
+fig_price.show()
+fig_engage.show()
+fig_matrix.show()
